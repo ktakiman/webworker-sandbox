@@ -7,14 +7,17 @@ window.onload = () => {
 
   worker.onerror = ev => console.log({ _: 'error!', ev });
   worker.onmessage = ev => {
-    console.log({ _: 'msg!', ev });
+    // console.log({ _: 'msg!', ev });
     elemOutput.innerText = ev.data.join(', ');
-    elemVerify.innerText = '' + ev.data.reduce((ag, v) => ag * v, 1);
+    elemVerify.innerText = '' + ev.data.reduce((ag, v) => ag * v, 1n);
   };
 
   elemInput.oninput = ev => {
-    elemOutput.innerText = 'computing...';
-    worker.postMessage(parseInt(ev.target.value));
+    const bi = BigInt(ev.target.value);
+    if (bi > 1n) {
+      elemOutput.innerText = 'computing...';
+      worker.postMessage(bi);
+    }
   };
 
 };
